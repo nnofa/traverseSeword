@@ -11,12 +11,19 @@ hdr = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML,
 
 def traverseSeword():
   site='https://seword.com/2016'
-  for i in range(8,12):
-    getListArticle(site + '/'+ str(i) +'/')
+  hrefs=[];
+  for i in range(8,13):
+    hrefs = hrefs + getListArticle(site + '/'+ str(i) +'/')
 
-#kalo niat return array haruse  
+  contents=[];
+  for href in hrefs:
+    content=(getDetailedArticleText(href))
+    if(len(content) > 0):
+      contents.append(content)
+
 def getListArticle(site):
   j=1
+  ret=[]
   try:
     while(True):
       if(j > 1):
@@ -30,10 +37,10 @@ def getListArticle(site):
       for article in soup.find_all('article'):
         href = article.find('a', {"class":"image-link"})['href']
         if ("politik" in href):
-          print(href)
-          content = getDetailedArticleText(href)
+          ret.append(href)
   except urllib.error.HTTPError:
-    print("nothing to worries")
+    return ret
+  return ret
 
 
 def getDetailedArticleText(site):
